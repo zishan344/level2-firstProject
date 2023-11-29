@@ -12,6 +12,7 @@ const globalErrorHandler = (
 ) => {
   const statusCode = httpStatus.INTERNAL_SERVER_ERROR;
   const message = error.message || 'Something went wrong';
+
   return res.status(statusCode).json({
     success: false,
     message,
