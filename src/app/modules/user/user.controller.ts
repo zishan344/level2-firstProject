@@ -1,31 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 
 import { userService } from './user.service';
 import sendResponse from '../../utils/sendResponse';
 import { OK } from 'http-status';
+import catchAsync from '../../utils/catchAsync';
 
-const createStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { password, student: studentData } = req.body;
-    // const zodParsedData = studentValidationSchema.parse(studentData);
+const createStudent = catchAsync(async (req: Request, res: Response) => {
+  const { password, student: studentData } = req.body;
+  // const zodParsedData = studentValidationSchema.parse(studentData);
 
-    const result = await userService.createStudentIntoDB(password, studentData);
+  const result = await userService.createStudentIntoDB(password, studentData);
 
-    sendResponse(res, {
-      statusCode: OK,
-      success: true,
-      message: 'student is created successfully',
-      data: result,
-    });
-  } catch (err: any) {
-    next(err);
-  }
-};
+  sendResponse(res, {
+    statusCode: OK,
+    success: true,
+    message: 'student is created successfully',
+    data: result,
+  });
+});
 export const UserControllers = {
   createStudent,
 };
