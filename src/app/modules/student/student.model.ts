@@ -77,7 +77,7 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 
 const studentSchema = new Schema<TStudent, StudentModel>(
   {
-    id: { type: String, required: [true, 'ID is required'], unique: true },
+    id: { type: String, unique: true, required: [true, 'ID is required'] },
 
     user: {
       type: Schema.Types.ObjectId,
@@ -97,7 +97,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       },
       required: [true, 'Gender is required'],
     },
-    dateOfBirth: { type: String },
+    dateOfBirth: { type: Date },
     email: {
       type: String,
       required: [true, 'Email is required'],
@@ -132,7 +132,10 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       required: [true, 'Local guardian information is required'],
     },
     profileImg: { type: String },
-
+    admissionSemester: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -154,10 +157,10 @@ studentSchema.virtual('fullName').get(function () {
 // pre save middleware/ hook : will work on create()  save()
 
 // post save middleware / hook
-studentSchema.post('save', function (doc, next) {
+/* studentSchema.post('save', function (doc, next) {
   doc.password = '';
   next();
-});
+}); */
 
 // Query Middleware
 studentSchema.pre('find', function (next) {
