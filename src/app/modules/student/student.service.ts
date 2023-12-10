@@ -4,21 +4,23 @@ import { User } from '../user/user.model';
 import AppError from '../../errors/AppError';
 import { BAD_REQUEST } from 'http-status';
 import { TStudent } from './student.interface';
+import QueryBuilder from '../../builder/QueryBuilders';
+import { studentSearchableField } from './studentConstant';
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  let searchTerm = '';
-  if (query.searchTerm) {
-    searchTerm = query.searchTerm as string;
-  }
-  const queryObj = { ...query };
-  const studentSearchableField = ['email', 'name.firstName', 'presentAddress'];
-  const searchQuery = Student.find({
+  // let searchTerm = '';
+  // if (query.searchTerm) {
+  //   searchTerm = query.searchTerm as string;
+  // }
+  // const queryObj = { ...query };
+
+  /*   const searchQuery = Student.find({
     $or: studentSearchableField.map((field) => ({
       [field]: { $regex: searchTerm, $options: 'i' },
     })),
-  });
+  }); */
 
-  const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
+  /*   const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
   excludeFields.forEach((ele) => delete queryObj[ele]);
   const filterQuery = searchQuery
     .find(queryObj)
@@ -52,8 +54,25 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
   if (query.fields) {
     selectField = (query.fields as string).split(',').join(' ');
   }
-  const filedFiltering = await skipQuery.select(selectField);
-  return filedFiltering;
+  const filedFiltering = await skipQuery.select(selectField); */
+  const studentQuery = new QueryBuilder(
+    Student.find()
+      .populate('admissionSemester')
+      .populate({
+        path: 'academicDepartment',
+        populate: {
+          path: 'academicFaculty',
+        },
+      }),
+    query,
+  )
+    .search(studentSearchableField)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+  const result = await studentQuery.modelQuery;
+  return result;
 };
 
 const getSingleStudentFromDB = async (id: string) => {
