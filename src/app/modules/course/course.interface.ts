@@ -9,5 +9,5 @@ export type TCourse = {
   prefix: string;
   code: number;
   credit: number;
-  preRequisiteCourses: [];
+  preRequisiteCourses: [TPreRequisiteCourses];
 };
