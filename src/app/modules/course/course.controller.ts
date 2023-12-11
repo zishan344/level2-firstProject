@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express';
 import sendResponse from '../../utils/sendResponse';
 import catchAsync from '../../utils/catchAsync';
 import { CourseService } from './course.service';
-import { OK } from 'http-status';
+import httpStatus, { OK } from 'http-status';
 
 const createCourse = catchAsync(async (req: Request, res: Response) => {
   const result = await CourseService.createCourseIntoDB(req.body);
@@ -42,11 +42,10 @@ const getSingleCourse = catchAsync(
     }
   },
 );
-/* const updateAdmin = catchAsync(async (req, res) => {
+const updateCourse = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const { admin } = req.body;
 
-  const result = await CourseService.updateAdminIntoDB(id, admin);
+  const result = await CourseService.updateCourseIntoDB(id, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -55,7 +54,7 @@ const getSingleCourse = catchAsync(
     data: result,
   });
 });
- */
+
 const deleteCourse = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -76,6 +75,7 @@ const deleteCourse = catchAsync(
 
 export const courseControllers = {
   createCourse,
+  updateCourse,
   getAllCourse,
   getSingleCourse,
   deleteCourse,

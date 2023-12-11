@@ -119,4 +119,5 @@ export const CourseService = {
   getAllCourseFromDB,
   getSingleCourseFromDB,
   deleteCourseFromDB,
+  updateCourseIntoDB,
 };
