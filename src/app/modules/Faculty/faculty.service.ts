@@ -48,11 +48,10 @@ const updateFacultyIntoDB = async (id: string, payload: Partial<TFaculty>) => {
     }
   }
 
-  const result = await Faculty.findByIdAndUpdate(
-    id,
-    { modifiedUpdateData },
-    { new: true, runValidator: true },
-  );
+  const result = await Faculty.findByIdAndUpdate(id, modifiedUpdateData, {
+    new: true,
+    runValidators: true,
+  });
   return result;
 };
 
